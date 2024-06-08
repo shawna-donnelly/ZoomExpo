@@ -2,6 +2,10 @@
   "name": "zoomexpo",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
