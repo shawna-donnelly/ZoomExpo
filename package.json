@@ -8,11 +8,15 @@
     "packages/*",
     "apps/*"
   ],
+  "scripts": {
+    "android": "cd apps/online-classes && expo run:android",
+    "ios": "cd apps/online-classes && expo run:ios",
+    "prebuild": "cd apps/online-classes && expo prebuild --clean"
+  },
   "nohoist": [
     "**/expo-router",
     "**/expo-router/**"
   ],
   "private": true,
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
