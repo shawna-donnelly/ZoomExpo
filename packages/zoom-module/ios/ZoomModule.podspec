@@ -24,4 +24,17 @@ Pod::Spec.new do |s|
   }
 
   s.source_files = "**/*.{h,m,swift}"
+  s.vendored_frameworks = 'Frameworks/MobileRTC.xcframework'
+  s.resource_bundles = {
+    'MobileRTCResources' => ['Frameworks/MobileRTCResources.bundle']
+  }
+
+  s.preserve_paths = [
+    "Frameworks/*.xcframework",
+    "**/*.h",
+    "Frameworks/*.xcframework/**/*.h"
+  ]
+  s.exclude_files = ["Frameworks/*.xcframework/**/*.h"]
+
+
 end
