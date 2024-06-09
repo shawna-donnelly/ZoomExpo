@@ -1,4 +1,4 @@
-import { EventEmitter, requireNativeModule } from "expo-modules-core";
+import { NativeModulesProxy, EventEmitter } from "expo-modules-core";
 
 // Import the native module. On web, it will be resolved to ZoomModule.web.ts
 // and on native platforms to ZoomModule.ts
@@ -15,4 +15,4 @@ export async function setValueAsync(value: string) {
   return await ZoomModule.setValueAsync(value);
 }
 
-const emitter = new EventEmitter(ZoomModule ?? requireNativeModule(ZoomModule));
+const emitter = new EventEmitter(ZoomModule ?? NativeModulesProxy.ZoomModule);
