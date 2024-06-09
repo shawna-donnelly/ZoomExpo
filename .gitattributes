@@ -1,0 +1,7 @@
+**/ios/**/MobileRTC filter=lfs diff=lfs merge=lfs -text
+**/ios/**/MobileRTC.xcframework/**/MobileRTC.framework/MobileRTC filter=lfs diff=lfs merge=lfs -text
+android/app/libs/mobilertc.aar filter=lfs diff=lfs merge=lfs -text
+**/android/libs/mobilertc-v6.0.2.21328.aar filter=lfs diff=lfs merge=lfs -text
+packages/zoom-module/android/maven/com/anonymous/expozoom/mobilertc/v6.0.2.21328/mobilertc-v6.0.2.21328.aar filter=lfs diff=lfs merge=lfs -text
+packages/zoom-module/android/maven/mobilertc-v6.0.2.21328.aar filter=lfs diff=lfs merge=lfs -text
+
