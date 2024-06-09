@@ -1,3 +1,4 @@
 node_modules
 apps/online-classes/android/
 apps/online-classes/ios/
+apps/online-classes/config/config.ts
