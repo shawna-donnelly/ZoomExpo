@@ -28,8 +28,11 @@
   "author": "Shawna Donnelly <shawleigh17@gmail.com> (https://github.com/shawna-donnelly)",
   "license": "MIT",
   "homepage": "https://github.com/shawna-donnelly/zoom-module#readme",
-  "dependencies": {},
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "@types/react": "^18.0.25",
     "expo-module-scripts": "^3.5.2",
     "expo-modules-core": "^1.12.14"
