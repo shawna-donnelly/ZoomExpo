@@ -1,40 +1,84 @@
 package expo.modules.zoommodule
 
+import android.util.Log
+import expo.modules.core.interfaces.Arguments
+import expo.modules.kotlin.functions.Queues
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import kotlinx.coroutines.Dispatchers
+import us.zoom.sdk.*;
 
-class ZoomModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+class ZoomModule : Module(), ZoomSDKInitializeListener {
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ZoomModule')` in JavaScript.
     Name("ZoomModule")
-
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
-    )
-
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     Function("hello") {
       "Hello world! 👋"
     }
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
+    AsyncFunction("initialize") { jwt: String ->
+      Log.d("ZOOM_MODULE", "inside initialize++ $jwt")
+      Log.d("ZOOM_MODULE2", "hi")
+      val sdk = ZoomSDK.getInstance();
+      Log.d("ZOOM_MODULE2", "hi")
+      val initParams = ZoomSDKInitParams().apply {
+        jwtToken = jwt
+        enableLog = true
+        domain = "zoom.us"
+      }
+      Log.d("ZOOM_MODULE2", jwt)
+      sdk.initialize(appContext.reactContext, this@ZoomModule, initParams)
+      return@AsyncFunction jwt
+    }.runOnQueue(Queues.MAIN)
+
+    AsyncFunction("joinMeeting"){zak: String, displayName: String, meetingNumber: String ->
+      val sdk = ZoomSDK.getInstance();
+      Log.d("ZOOM_NATIVE", "$zak $displayName $meetingNumber")
+        if (!sdk.isInitialized) {
+          return@AsyncFunction
+        }
+      Log.d("ZOOM_NATIVE", "We're socializing")
+
+      val meetingService = sdk.meetingService
+      Log.d("ZOOM_NATIVE", "MeetingService")
+
+      val params = JoinMeetingParam4WithoutLogin().apply {
+          this.displayName = displayName
+          this.meetingNo = meetingNumber
+          this.zoomAccessToken = zak
+        }
+      Log.d("ZOOM_NATIVE", "Params")
+
+      val options = JoinMeetingOptions()
+      Log.d("ZOOM_NATIVE", "options ${options.toString()}")
+      val joinMeetingResult = meetingService.joinMeetingWithParams(appContext.reactContext, params, options)
+      Log.d("ZOOM_NATIVE", "joinMeetingResult ${joinMeetingResult.toString()}")
+//        if (joinMeetingResult != MeetingError.MEETING_ERROR_SUCCESS) {
+//          Log.d("ZOOM_MEETING_ERROR", joinMeetingResult.toString())
+//        }
+
+    }.runOnQueue(Queues.MAIN)
+
     }
 
-
+  override fun onZoomSDKInitializeResult(errorCode: Int, internalErrorCode: Int) {
+    if (errorCode == ZoomError.ZOOM_ERROR_SUCCESS) {
+      Log.d("ZOOM_INITIALIZE_SUCCESS", "Success!")
+      val zoomSDK = ZoomSDK.getInstance()
+      //zoomSDK.meetingService.addListener(this);
+      // sendEvent("InitializeSucceeded");
+    } else {
+      Log.d("ZOOM_INITIALIZE_ERROR", errorCode.toString())
+      // map.putString("errorReason", mapErrorCodeToErrorReason(errorCode));
+      // sendEvent("InitializeFailed", map);
+    }
   }
+
+  override fun onZoomAuthIdentityExpired() {
+    TODO("Not yet implemented")
+  }
+
 }
+
+
